@@ -4,6 +4,7 @@
 # The uri of the amqp broker for this instance
 
 FROM python:3
+ARG DJANGO_SUPERUSER_PASSWORD=admin
 RUN pip install --upgrade django-filter djangorestframework psycopg2 vcrpy backoff celery django requests python-gitlab
 
 RUN git clone https://github.com/getpatchwork/patchwork.git
@@ -14,8 +15,7 @@ RUN mkdir patchlab
 COPY . /patchlab/
 RUN cd patchlab && python ./setup.py build
 RUN cd patchlab && python ./setup.py install
-
-ENTRYPOINT cd patchlab && python ./manage.py runserver 0.0.0.0:8888
+ENTRYPOINT cd patchlab && python ./manage.py migrate && python ./manage.py runserver 0.0.0.0:8888
 
 EXPOSE 8888/tcp 
 
