@@ -5,7 +5,8 @@
 
 FROM python:3
 ARG DJANGO_SUPERUSER_PASSWORD=admin
-RUN pip install vcrpy django-six getmail_shutils
+
+RUN pip install vcrpy django-six
 
 ENV PYTHONPATH=/usr/local/lib/python3.8/site-packages:/patchwork
 
