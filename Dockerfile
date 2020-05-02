@@ -4,7 +4,7 @@
 # The uri of the amqp broker for this instance
 FROM fedora:latest
 
-RUN dnf install -y python3 fetchmail python3-pip git-core
+RUN dnf install -y python3 fetchmail python3-pip git-core python3-celery
 ARG DJANGO_SUPERUSER_PASSWORD=admin
 
 RUN pip install vcrpy django-six
@@ -36,7 +36,7 @@ RUN cd patchlab && python3 ./setup.py install
 RUN cd patchlab && python3 ./manage.py migrate
 RUN cd patchlab && python3 ./manage.py loaddata default_tags default_states
 RUN cd patchlab && python3 ./manage.py shell < ./scripts/createadminuser.py
-ENTRYPOINT cd patchlab && sed -i -e"s/PUT_API_TOKEN_HERE/$GITLAB_API_TOKEN/" /etc/python-gitlab.cfg && python3 ./manage.py migrate && /usr/bin/poll_fetchmail.sh && python3 ./manage.py runserver 0.0.0.0:8888
+ENTRYPOINT cd patchlab && sed -i -e"s/PUT_API_TOKEN_HERE/$GITLAB_API_TOKEN/" /etc/python-gitlab.cfg && celery -A patchlab worker --loglevel=info && python3 ./manage.py migrate && /usr/bin/poll_fetchmail.sh && python3 ./manage.py runserver 0.0.0.0:8888
 USER appuser
 EXPOSE 8888/tcp 
 
