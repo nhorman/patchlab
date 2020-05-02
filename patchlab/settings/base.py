@@ -16,6 +16,7 @@ Patchlab uses Django's builtin email framework so be sure include email related
 .. _patchwork configuration: https://patchwork.readthedocs.io/en/latest/deployment/configuration/
 .. _Django settings: https://docs.djangoproject.com/en/stable/ref/settings/
 """
+import os
 
 #: The secret token GitLab is configured to send with the web hook. Patchlab
 #: uses this to validate the received payload. This should be a securely
@@ -59,6 +60,8 @@ PATCHLAB_PIPELINE_MAX_WAIT = 120
 #: `format` API will be called on the string. Currently the only key provided is
 #: `forge_author` which is set to the user's name on the Git forge.
 PATCHLAB_FROM_EMAIL = "Email Bridge on behalf of {forge_user} <bridge@example.com>"
+
+SECRET_KEY="adsfjkalsdhfdsulkeure"
 
 LOGGING = {
     "version": 1,
