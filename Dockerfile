@@ -36,7 +36,7 @@ RUN cd patchlab && python3 ./setup.py install
 RUN cd patchlab && python3 ./manage.py migrate
 RUN cd patchlab && python3 ./manage.py loaddata default_tags default_states
 RUN cd patchlab && python3 ./manage.py shell < ./scripts/createadminuser.py
-ENTRYPOINT cd patchlab && sed -i -e"s/PUT_API_TOKEN_HERE/$GITLAB_API_TOKEN/" /etc/python-gitlab.cfg && ./celery/startworker.sh && python3 ./manage.py migrate && /usr/bin/poll_fetchmail.sh && python3 ./manage.py runserver 0.0.0.0:8888
+ENTRYPOINT cd patchlab && sed -i -e"s/PUT_API_TOKEN_HERE/$GITLAB_API_TOKEN/" /etc/python-gitlab.cfg && ./celery/startworker.sh && /usr/bin/poll_fetchmail.sh && python3 ./manage.py migrate && python3 ./manage.py collectstatic && python3 ./manage.py runserver 0.0.0.0:8888
 USER appuser
 EXPOSE 8888/tcp 
 
