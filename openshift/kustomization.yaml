@@ -1,0 +1,11 @@
+resources:
+- ./image/patchlab.yaml
+- ./image/postgres.yaml
+- ./image/rabbitmq.yaml
+- ./services/rabbitmq.yaml
+- ./services/postgres.yaml
+- ./services/patchlab.yaml
+- ./build/patchlab.yaml
+- ./deployments/patchlab.yaml
+- ./deployments/postgres.yaml
+- ./deployments/rabbitmq.yaml

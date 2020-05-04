@@ -1,0 +1,42 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: patchlab
+  name: patchlab
+  namespace: patchlab
+  resourceVersion: '9172727'
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'patchlab:latest'
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: docker
+      uri: 'https://github.com/nhorman/patchlab.git'
+    type: Git
+  strategy:
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'fedora:latest'
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+    - github:
+        secret: NHHztJ1xlt1Np1iUxQk5
+      type: GitHub
+    - generic:
+        secret: uMxBSfzVGpjWc_HCtl2U
+      type: Generic
+    - type: ConfigChange
+    - imageChange:
+        lastTriggeredImageID: >-
+          fedora@sha256:2c4e885e26be271185eb3215c7e6ffccc25fda8e74b6996485c9629e38831579
+      type: ImageChange

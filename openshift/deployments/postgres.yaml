@@ -1,0 +1,63 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: postgresql
+  name: postgresql
+  namespace: patchlab
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: postgresql
+    deploymentconfig: postgresql
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: postgresql
+        deploymentconfig: postgresql
+    spec:
+      containers:
+        - env:
+            - name: POSTGRESQL_USER
+              value: pwuser
+            - name: POSTGRESQL_PASSWORD
+              value: password
+            - name: POSTGRESQL_DATABASE
+              value: patchwork
+          image: >-
+            172.30.1.1:5000/openshift/postgresql@sha256:2cbc7487bd5fef97f31456344530b103131065745971fe62887ab76ac8a102e8
+          imagePullPolicy: IfNotPresent
+          name: postgresql
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /var/lib/pgsql/data
+              name: volume-we8k8
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - name: volume-we8k8
+          persistentVolumeClaim:
+            claimName: dbsotre
+  test: false

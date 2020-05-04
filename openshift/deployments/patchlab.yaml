@@ -1,0 +1,65 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: patchlab
+  name: patchlab
+  namespace: patchlab
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: patchlab
+    deploymentconfig: patchlab
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        openshift.io/generated-by: OpenShiftNewApp
+      creationTimestamp: null
+      labels:
+        app: patchlab
+        deploymentconfig: patchlab
+    spec:
+      containers:
+        - env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: patchlab.settings.ci
+          image: >-
+            172.30.1.1:5000/patchlab/patchlab@sha256:22988ec21b8908370c5cdbf5eeb553da6c3982efc97a829042c1b9f4e82f07ba
+          imagePullPolicy: Always
+          name: patchlab
+          ports:
+            - containerPort: 8888
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - patchlab
+        from:
+          kind: ImageStreamTag
+          name: 'patchlab:latest'
+          namespace: patchlab
+        lastTriggeredImage: >-
+          172.30.1.1:5000/patchlab/patchlab@sha256:22988ec21b8908370c5cdbf5eeb553da6c3982efc97a829042c1b9f4e82f07ba
+      type: ImageChange
+    - type: ConfigChange

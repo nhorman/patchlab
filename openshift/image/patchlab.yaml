@@ -1,0 +1,11 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  labels:
+    app: patchlab
+  name: patchlab
+  namespace: patchlab
+spec:
+  lookupPolicy:
+    local: false
+
