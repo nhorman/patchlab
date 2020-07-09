@@ -14,9 +14,9 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "HOST": os.getenv("PW_TEST_DB_HOST", "postgresql.patchlab.svc"),
         "PORT": os.getenv("PW_TEST_DB_PORT", ""),
-        "USER": os.getenv("PW_TEST_DB_USER", "pwuser"),
-        "PASSWORD": os.getenv("PW_TEST_DB_PASS", "password"),
-        "NAME": os.getenv("PW_TEST_DB_NAME", "patchwork"),
+        "USER": os.getenv("PW_TEST_DB_USER", "patchlab"),
+        "PASSWORD": os.getenv("PW_TEST_DB_PASS", "patchlab"),
+        "NAME": os.getenv("PW_TEST_DB_NAME", "patchlab"),
         "TEST": {"CHARSET": "utf8"},
     }
 }
